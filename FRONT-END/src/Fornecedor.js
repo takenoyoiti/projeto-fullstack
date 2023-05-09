@@ -4,7 +4,7 @@ export class Fornecedor extends Component{
     render(){
         return(
             <div>
-                <h3>This is Fornecedor page</h3>
+                <h3>teste</h3>
             </div>
         )
     }
