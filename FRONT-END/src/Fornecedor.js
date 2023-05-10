@@ -29,6 +29,13 @@ export class Fornecedor extends Component{
             console.log(data);
             this.setState({fornecedores:data});
         })
+
+        fetch(variables.API_URL+'empresas')
+        .then(response=>response.json())
+        .then(data=>{
+            console.log(data);
+            this.setState({empresas:data});
+        })
     }
 
     componentDidMount(){
@@ -47,7 +54,19 @@ export class Fornecedor extends Component{
         this.setState({cep:f.target.value});
     }
 
-    addClick(forn){
+    changeRg=(f)=>{
+        this.setState({rg:f.target.value});
+    }
+
+    changeDataNascimento=(f)=>{
+        this.setState({dataNascimento:f.target.value});
+    }
+
+    changeEmail=(f)=>{
+        this.setState({email:f.target.value});
+    }
+
+    addClick(){
         this.setState({
             modalTitle:"Adicionar Fornecedor",
             id:0,
@@ -62,18 +81,18 @@ export class Fornecedor extends Component{
         })
     }
 
-    editClick(emp){
+    editClick(forn){
         this.setState({
             modalTitle:"Editar Fornecedor",
-            id:0,
-            nome:"",
-            cnpjCpf:"",
-            rg:"",
-            cep:"",
-            dataNascimento:"",
-            email:"",
-            tipoFornecedor: 0,
-            fornecedorEmpresa:""
+            id:forn.id,
+            nome:forn.nome,
+            cnpjCpf:forn.cnpjCpf,
+            rg:forn.rg,
+            cep:forn.cep,
+            dataNascimento:forn.dataNascimento,
+            email:forn.email,
+            tipoFornecedor: forn.tipoFornecedor,
+            fornecedorEmpresa:forn.fornecedorEmpresa
         })
     }
 
@@ -120,7 +139,7 @@ export class Fornecedor extends Component{
                 cep:this.state.cep,
                 dataNascimento:this.state.dataNascimento,
                 email:this.state.email,
-                tipoFornecedor: this.state.tipoFornecedor,
+                tipoFornecedor: (this.state.cnpjCpf.toString() > 11)?1:0,
                 fornecedorEmpresa:this.state.fornecedorEmpresa
             })
         })
@@ -190,7 +209,10 @@ export class Fornecedor extends Component{
                                 CPF / CNPJ
                             </th>
                             <th>
-                                Nome Fantasia
+                                Nome
+                            </th>
+                            <th>
+                                RG
                             </th>
                             <th>
                                 CEP
@@ -215,6 +237,7 @@ export class Fornecedor extends Component{
                                 <td>{forn.id}</td>
                                 <td>{forn.cnpjCpf}</td>
                                 <td>{forn.nome}</td>
+                                <td>{forn.rg}</td>
                                 <td>{forn.cep}</td>
                                 <td>{forn.dataNascimento}</td>
                                 <td>{forn.email}</td>
@@ -278,6 +301,24 @@ export class Fornecedor extends Component{
                             value={cep}
                             onChange={this.changeCep}/>
                         </div>
+                        <div className="input-group mb-3">
+                            <span className="input-group-text">RG</span>
+                            <input type="text" className="form-control"
+                            value={rg}
+                            onChange={this.changeRg}/>
+                        </div>
+                        <div className="input-group mb-3">
+                            <span className="input-group-text">Data de Nascimento</span>
+                            <input type="date" className="form-control"
+                            value={dataNascimento}
+                            onChange={this.changeDataNascimento}/>
+                        </div>
+                        <div className="input-group mb-3">
+                            <span className="input-group-text">E-mail</span>
+                            <input type="text" className="form-control"
+                            value={email}
+                            onChange={this.changeEmail}/>
+                        </div>
 
                         {id===0?
                         <button type="button"
@@ -294,13 +335,9 @@ export class Fornecedor extends Component{
                         :null}
 
                     </div>
-
                 </div>
                 </div> 
                 </div>
-
-                
-                
             </div>
         )
     }

@@ -140,25 +140,27 @@ namespace WebAPI.Controllers
                 return BadRequest("Não é permitido cadastrar um fornecedor pessoa física menor de idade para uma empresa do Paraná.");
             }
 
-            if (fornecedor.FornecedorEmpresa.Any())
+            if (fornecedor.FornecedorEmpresa != null)
             {
-                foreach (var item in fornecedor.FornecedorEmpresa)
+                if (fornecedor.FornecedorEmpresa.Any())
                 {
-                    var empresa = await _context.Empresa.FindAsync(item.EmpresaId);
-                    if (empresa == null)
+                    foreach (var item in fornecedor.FornecedorEmpresa)
                     {
-                        return BadRequest($"Empresa com ID {item.EmpresaId} não encontrada.");
+                        var empresa = await _context.Empresa.FindAsync(item.EmpresaId);
+                        if (empresa == null)
+                        {
+                            return BadRequest($"Empresa com ID {item.EmpresaId} não encontrada.");
+                        }
+
+                        var fornecedorEmpresa = new FornecedorEmpresa
+                        {
+                            FornecedorId = fornecedor.Id,
+                            EmpresaId = item.EmpresaId
+                        };
                     }
-
-                    var fornecedorEmpresa = new FornecedorEmpresa
-                    {
-                        FornecedorId = fornecedor.Id,
-                        EmpresaId = item.EmpresaId
-                    };
                 }
-
-                _context.Fornecedor.Add(fornecedor);
             }
+            _context.Fornecedor.Add(fornecedor);
                 
             await _context.SaveChangesAsync();
 
